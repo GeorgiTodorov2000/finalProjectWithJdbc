@@ -1,0 +1,133 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema final_project
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema final_project
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `final_project` DEFAULT CHARACTER SET utf8 ;
+USE `final_project` ;
+
+-- -----------------------------------------------------
+-- Table `final_project`.`user`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `final_project`.`user` ;
+
+CREATE TABLE IF NOT EXISTS `final_project`.`user` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `firstName` VARCHAR(45) NOT NULL,
+  `lastName` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `username` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `gender` VARCHAR(45) NOT NULL,
+  `role` VARCHAR(45) NOT NULL,
+  `status` VARCHAR(45) NOT NULL,
+  `profileCreated` TIMESTAMP NOT NULL,
+  `profileUpdated` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 13
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `final_project`.`restaurant`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `final_project`.`restaurant` ;
+
+CREATE TABLE IF NOT EXISTS `final_project`.`restaurant` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL DEFAULT NULL,
+  `restaurantOwnerId` BIGINT NOT NULL,
+  PRIMARY KEY (`id`, `restaurantOwnerId`),
+  INDEX `fk_restaurant_user1_idx` (`restaurantOwnerId` ASC) VISIBLE,
+  CONSTRAINT `fk_restaurant_user1`
+    FOREIGN KEY (`restaurantOwnerId`)
+    REFERENCES `final_project`.`user` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 14
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `final_project`.`recipe`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `final_project`.`recipe` ;
+
+CREATE TABLE IF NOT EXISTS `final_project`.`recipe` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL DEFAULT NULL,
+  `ingredients` VARCHAR(45) NULL DEFAULT NULL,
+  `price` DOUBLE NULL DEFAULT NULL,
+  `grams` INT NULL DEFAULT NULL,
+  `recipeFromRestaurantId` BIGINT NOT NULL,
+  PRIMARY KEY (`id`, `recipeFromRestaurantId`),
+  INDEX `fk_recipe_restaurant_idx` (`recipeFromRestaurantId` ASC) VISIBLE,
+  CONSTRAINT `fk_recipe_restaurant`
+    FOREIGN KEY (`recipeFromRestaurantId`)
+    REFERENCES `final_project`.`restaurant` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `final_project`.`fooddelivery`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `final_project`.`fooddelivery` ;
+
+CREATE TABLE IF NOT EXISTS `final_project`.`fooddelivery` (
+  `idfoodDelivery` INT NOT NULL AUTO_INCREMENT,
+  `restaurantId` BIGINT NOT NULL,
+  `userId` BIGINT NOT NULL,
+  `recipeId` BIGINT NOT NULL,
+  `recipe_id` BIGINT NOT NULL,
+  `recipe_recipeFromRestaurantId` BIGINT NOT NULL,
+  `user_id` BIGINT NOT NULL,
+  PRIMARY KEY (`idfoodDelivery`, `recipe_id`, `recipe_recipeFromRestaurantId`, `user_id`),
+  INDEX `fk_fooddelivery_recipe1_idx` (`recipe_id` ASC, `recipe_recipeFromRestaurantId` ASC) VISIBLE,
+  INDEX `fk_fooddelivery_user1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_fooddelivery_recipe1`
+    FOREIGN KEY (`recipe_id` , `recipe_recipeFromRestaurantId`)
+    REFERENCES `final_project`.`recipe` (`id` , `recipeFromRestaurantId`),
+  CONSTRAINT `fk_fooddelivery_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `final_project`.`user` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `final_project`.`reservations`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `final_project`.`reservations` ;
+
+CREATE TABLE IF NOT EXISTS `final_project`.`reservations` (
+  `idreservations` INT NOT NULL AUTO_INCREMENT,
+  `userId` BIGINT NOT NULL,
+  `restaurantId` BIGINT NOT NULL,
+  `reservationDate` DATETIME NOT NULL,
+  `user_id` BIGINT NOT NULL,
+  PRIMARY KEY (`idreservations`, `user_id`),
+  INDEX `fk_reservations_user1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_reservations_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `final_project`.`user` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
