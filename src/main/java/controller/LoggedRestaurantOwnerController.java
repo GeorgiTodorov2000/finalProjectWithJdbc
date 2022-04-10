@@ -122,6 +122,13 @@ public class LoggedRestaurantOwnerController {
                     recipeService.addRecipe(newRecipe);
                     return "Your recipe was added: " + newRecipe;
                 }),
+                new LoggedUser.Option("Delete recipe", () -> {
+                    recipeService.getAllRecipes().forEach(System.out::println);
+                    System.out.println("Which restaurant do you want to delete");
+                    Long choice = scan.nextLong();
+                    recipeService.deleteRecipeById(choice);
+                    return "";
+                }),
                 new LoggedUser.Option("Create restaurant", () -> {
                     Restaurant restaurant = new CreateRestaurant().input();
                     restaurant.setRestaurantOwnerId(user.getId());
@@ -129,6 +136,7 @@ public class LoggedRestaurantOwnerController {
                     return "Your restaurant was added " + restaurant;
                 }),
                 new LoggedUser.Option("Delete restaurant", () -> {
+                    restaurantService.getAllRestaurants().forEach(System.out::println);
                     System.out.println("Which restaurant do you want to delete");
                     Long choice = scan.nextLong();
                     restaurantService.deleteRestaurantById(choice);
