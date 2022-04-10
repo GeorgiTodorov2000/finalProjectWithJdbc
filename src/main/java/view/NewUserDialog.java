@@ -50,14 +50,11 @@ public class NewUserDialog implements EntityDialog<User> {
         System.out.println("Enter email");
         String email = scan.next();
         Matcher matcher = pattern.matcher(email);
-        while (user.getEmail() == null) {
-            if (!matcher.matches()) {
-                System.out.println("Invalid email");
-                email = scan.next();
-            } else {
-                user.setEmail(email);
-            }
+        while (!email.matches(passwordRegex)) {
+            System.out.println("Invalid email");
+            email = scan.next();
         }
+        user.setEmail(email);
         System.out.println("Enter username");
         String username = scan.next();
         while (user.getUsername() == null) {
