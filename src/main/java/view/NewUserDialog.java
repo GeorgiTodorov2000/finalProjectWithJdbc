@@ -29,7 +29,7 @@ public class NewUserDialog implements EntityDialog<User> {
 
         System.out.println("Enter first name");
         String firstName = scan.next();
-        while(user.getFirstName() == null) {
+        while (user.getFirstName() == null) {
             if (firstName.length() < 2 || firstName.length() > 15) {
                 System.out.println("First name must be between 2 and 15 chars");
                 firstName = scan.next();
@@ -39,7 +39,7 @@ public class NewUserDialog implements EntityDialog<User> {
         }
         System.out.println("Enter last name");
         String lastName = scan.next();
-        while(user.getLastName() == null) {
+        while (user.getLastName() == null) {
             if (lastName.length() < 2 || lastName.length() > 15) {
                 System.out.println("Last name must be between 2 and 15 chars");
                 lastName = scan.next();
@@ -50,7 +50,7 @@ public class NewUserDialog implements EntityDialog<User> {
         System.out.println("Enter email");
         String email = scan.next();
         Matcher matcher = pattern.matcher(email);
-        while(user.getEmail() == null) {
+        while (user.getEmail() == null) {
             if (!matcher.matches()) {
                 System.out.println("Invalid email");
                 email = scan.next();
@@ -60,7 +60,7 @@ public class NewUserDialog implements EntityDialog<User> {
         }
         System.out.println("Enter username");
         String username = scan.next();
-        while(user.getUsername() == null) {
+        while (user.getUsername() == null) {
             if (username.length() < 2 || username.length() > 15) {
                 System.out.println("Username must be between 2 and 15 chars");
                 username = scan.next();
@@ -71,15 +71,11 @@ public class NewUserDialog implements EntityDialog<User> {
         System.out.println("Enter password");
         String password = scan.next();
         Matcher passwordMatcher = passwordPattern.matcher(password);
-        while(user.getPassword() == null) {
-            if (!passwordMatcher.matches()) {
-                System.out.println("Password must be between 8 and 15 length, it MUST contain at least one digit, one capital letter, and one sign different than letter or digit");
-                password = scan.next();
-            } else {
-                user.setPassword(password);
-            }
+        while (!password.matches(passwordRegex)) {
+            System.out.println("Password must be between 8 and 15 length, it MUST contain at least one digit, one capital letter, and one sign different than letter or digit");
+            password = scan.next();
         }
-
+        user.setPassword(password);
         System.out.println("Choose gender");
         System.out.println("0. Male");
         System.out.println("1. Female");
@@ -90,9 +86,9 @@ public class NewUserDialog implements EntityDialog<User> {
                 choosenGender = MALE;
                 break;
 
-                case 1:
-                    choosenGender = FEMALE;
-                    break;
+            case 1:
+                choosenGender = FEMALE;
+                break;
         }
         user.setGender(choosenGender);
         user.setStatus(ACTIVE);
@@ -100,7 +96,7 @@ public class NewUserDialog implements EntityDialog<User> {
         System.out.println("0. User");
         System.out.println("1. Restaurant owner");
         int role = scan.nextInt();
-        if(role == 0) {
+        if (role == 0) {
             user.setRole(REGISTERED_USER);
         } else {
             user.setRole(RESTAURANT_OWNER);

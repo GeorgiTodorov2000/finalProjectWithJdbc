@@ -195,7 +195,7 @@ public class UserRepositoryJdbc implements UserRepository {
     }
 
     @Override
-    public User deleteById(Long id) throws NonexistingEntityException {
+    public void deleteById(Long id) throws NonexistingEntityException {
         try (var stmt = connection.prepareStatement(DELETE_USER)) {
             stmt.setLong(1, id);
             // 5. Execute insert statement
@@ -218,7 +218,6 @@ public class UserRepositoryJdbc implements UserRepository {
             log.error("Error creating connection to DB", ex);
             throw new EntityPersistenceException("Error executing SQL query: " + DELETE_USER, ex);
         }
-        return null;
     }
 
     @Override

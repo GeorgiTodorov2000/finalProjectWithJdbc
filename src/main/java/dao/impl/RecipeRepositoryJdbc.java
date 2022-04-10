@@ -148,8 +148,7 @@ public class RecipeRepositoryJdbc implements RecipeRepository {
     }
 
     @Override
-    public Recipe deleteById(Long id) throws NonexistingEntityException {
-        return null;
+    public void deleteById(Long id) throws NonexistingEntityException {
     }
 
     @Override

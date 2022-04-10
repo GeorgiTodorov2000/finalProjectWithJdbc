@@ -18,6 +18,10 @@ public class RestaurantRepositoryJdbc implements RestaurantRepository {
             "insert into `restaurant` (`name`, `restaurantOwnerId`) values (?, ?);";
     public static final String UPDATE_RESTAURANT =
             "update `final_project`.`restaurant` SET `name` = ? WHERE (`id` = ?);";
+    public static final String DELETE_RESTAURANT =
+            "DELETE from `restaurant` WHERE (`id` = ?);";
+
+
     private Connection connection;
 
     public RestaurantRepositoryJdbc(Connection connection) {
@@ -137,8 +141,30 @@ public class RestaurantRepositoryJdbc implements RestaurantRepository {
     }
 
     @Override
-    public Restaurant deleteById(Long id) throws NonexistingEntityException {
-        return null;
+    public void deleteById(Long id) throws NonexistingEntityException {
+        try(var stmt = connection.prepareStatement(DELETE_RESTAURANT)) {
+            stmt.setLong(1, id);
+            // 5. Execute insert statement
+            connection.setAutoCommit(false);
+            var affectedRows = stmt.executeUpdate();
+            // more updates here ...
+            connection.commit();
+            connection.setAutoCommit(true);
+
+            // 6. Check results and Get generated primary key
+            if (affectedRows == 0) {
+                throw new EntityPersistenceException("Deleting restaurant failed, no rows affected.");
+            }
+
+        } catch (SQLException ex) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                throw new EntityPersistenceException("Error rolling back SQL query: " + SELECT_ALL_RESTAURANTS, ex);
+            }
+            log.error("Error creating connection to DB", ex);
+            throw new EntityPersistenceException("Error executing SQL query: " + SELECT_ALL_RESTAURANTS, ex);
+        }
     }
 
     @Override

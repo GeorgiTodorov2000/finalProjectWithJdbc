@@ -53,6 +53,6 @@ public interface Repository<K, V extends dao.Identifiable<K>> {
     void clear();
     V update(V entity) throws NonexistingEntityException;
     long count();
-    V deleteById(Long id) throws NonexistingEntityException;
+    void deleteById(Long id) throws NonexistingEntityException;
     V findById(Long id) throws NonexistingEntityException;
 }

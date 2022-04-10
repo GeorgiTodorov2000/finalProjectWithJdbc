@@ -128,6 +128,12 @@ public class LoggedRestaurantOwnerController {
                     restaurantService.addRestaurant(restaurant);
                     return "Your restaurant was added " + restaurant;
                 }),
+                new LoggedUser.Option("Delete restaurant", () -> {
+                    System.out.println("Which restaurant do you want to delete");
+                    Long choice = scan.nextLong();
+                    restaurantService.deleteRestaurantById(choice);
+                    return "";
+                }),
                 new LoggedUser.Option("Update user information", () -> {
                     // We are calling the updateUser from userService
                     // then we call update user from loggedUserController

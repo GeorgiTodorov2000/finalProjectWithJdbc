@@ -1,5 +1,6 @@
 package controller;
 
+import exception.NonexistingEntityException;
 import model.Recipe;
 import model.Restaurant;
 import model.User;
